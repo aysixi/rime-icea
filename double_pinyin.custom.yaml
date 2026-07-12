@@ -41,6 +41,8 @@ patch:
     weak_collocation_penalty: -100
     rear_penalty: -20
 
+  translator/dictionary: rime_ice_private
+
   # 次翻译器，英文
   melt_eng:
     dictionary: melt_eng # 挂载词库 melt_eng.dict.yaml

@@ -1,0 +1,21 @@
+patch:
+  switches:
+    - name: ascii_mode
+      reset: 0
+      states: [あ, 英字]
+    - options: [hiragana, katakana, hw_katakana]
+      reset: 0
+      states: [ひらがな, カタカナ, ｶﾀｶﾅ]
+    - name: emoji
+      reset: 0
+      states: [❄️, 🌸]
+    - name: full_shape
+      states: [半角, 全角]
+    - name: ascii_punct
+      reset: 1
+      states: [¥, $]
+
+  key_binder:
+    bindings: # 也可以再增加方案专有的
+      - { when: always, accept: Shift+W, select: double_pinyin }
+      - { when: always, accept: Shift+Q, select: rime_ice }

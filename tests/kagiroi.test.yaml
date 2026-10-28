@@ -1,0 +1,81 @@
+schema: kagiroi
+source_dir: ..
+deploy:
+  default:
+    tests:
+      - send: a
+        assert: cand[1].text == "あ"
+      - send: an
+        assert: cand[1].text == "アン"
+      - send: ana
+        assert: cand[1].text == "穴"
+      - send: anat
+        assert: cand[1].text == "穴"
+      - send: anata
+        assert: cand[1].text == "あなた"
+
+      # preedit edge cases
+      - send: tyaa
+        assert: preedit == "ちゃあ"
+      - send: ccya
+        assert: preedit == "っちゃ"
+      - send: nannya
+        assert: preedit == "なんや"
+      - send: nnnnn
+        assert: preedit == "んんn"
+      - send: nnnnnn
+        assert: preedit == "んんん"
+
+      #　sentences
+      - send: karetahazunoedanitumottayuki
+        assert: cand[1].text == "枯れたはずの枝に積もった雪"
+      - send: suiheisenngahikaruasanianatanokibougakuzureotite
+        assert: cand[1].text == "水平線が光る朝にあなたの希望が崩れ落ちて"
+      - send: nagasisokonetashoujonoti
+        assert: cand[2].text == "流しそこねた少女の血"
+      
+      # partial selection
+      - send: 'daisukidattakotomo31'
+        assert: commit == "大好きだったことも"
+      
+      # custom phrase
+      - send: 'chuushuuinn'
+        assert: cand[1].text == "中州韻"
+
+      - send: 'kagiroin{Left}{BackSpace}'
+        assert: preedit == "かぎろn"
+      - send: 'kagiroin{BackSpace}'
+        assert: preedit == "かぎろい"
+      - send: 'kagiroi{Left}{Left}{Left}{BackSpace}'
+        assert: preedit == "ぎろい"
+
+      # UTF-8 editing stays active inside Japanese segments.
+      - send: kana{BackSpace}
+        assert: preedit == "か"
+      - send: kana{BackSpace}{BackSpace}
+        assert: preedit == nil
+      - send: kana{Left}{BackSpace}
+        assert: preedit == "な"
+      - send: kana{Home}{Delete}
+        assert: preedit == "な"
+      - send: kana{Home}{Right}{Delete}
+        assert: preedit == "か"
+      - send: kana{Left}{Right}{BackSpace}
+        assert: preedit == "か"
+      - send: kana{BackSpace}ki
+        assert: preedit == "かき"
+
+  katakana:
+    tests:
+      - send: 'aida{Control+i}'
+        assert: cand[1].text == "アイダ" and preedit == "アイダ"
+      - send: 'aida{Control+o}'
+        assert: cand[1].text == "ｱｲﾀﾞ" and preedit == "ｱｲﾀﾞ"
+    
+
+  nocrash:
+    tests:
+      - send: nani{space}
+        assert: true
+      - send: nani{space}
+        assert: true
